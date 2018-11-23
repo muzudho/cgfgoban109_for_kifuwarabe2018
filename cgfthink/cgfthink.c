@@ -209,7 +209,8 @@ DLL_EXPORT int cgfgui_thinking(
 			fprintf(fp, ",");
 
 			// ÉRÉEÇèoóÕ
-			itoa(kou_z, buffer, 10);
+			xxyy = (kou_z % 256) * 100 + (kou_z / 256);
+			itoa(xxyy, buffer, 10);
 			fprintf(fp, buffer);
 			fprintf(fp, ",");
 
