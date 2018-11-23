@@ -49,7 +49,6 @@ void count_dame(int tz);				// ダメと石の数を調べる
 void count_dame_sub(int tz, int col);	// ダメと石の数を調べる再帰関数
 int move_one(int z, int col);			// 1手進める。z ... 座標、col ... 石の色
 void print_board(void);					// 現在の盤面を表示
-int think_sample(int col);
 int get_z(int x,int y);					// (x,y)を1つの座標に変換
 int endgame_status(int endgame_board[]);		// 終局処理
 int endgame_draw_figure(int endgame_board[]);	// 図形を描く
@@ -324,62 +323,9 @@ DLL_EXPORT int cgfgui_thinking(
 	}
 	// (2017-03-17 Add end)
 
-	// (2017-03-17 Modify begin)
-	if (0 == ret_z)
-	{
-		PRT("(＾◇＾)パスするぐらいならランダム打ちだ☆！\n");
-		// PASSとダイアログが出てきて対局が止まるのを防止☆
-		ret_z = think_sample(col);
-	}
-	// (2017-03-17 Modify end)
-
 	PRT("思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
 	PRT("着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
 	//  print_board();
-	return ret_z;
-}
-
-
-// 乱数に近い評価関数。少し石を取りに行くように。
-int think_sample(int col)
-{
-	int max,ret_z;
-	int x,y,z,i,value,capture,z1,flag,safe,k;
-	int un_col = UNCOL(col);
-
-	// 実行するたびに違う値が得られるように現在の時刻で乱数を初期化
-	srand( (unsigned)clock() );
-
-	max = -1;
-	ret_z = 0;
-	for (y=0;y<board_size;y++) for (x=0;x<board_size;x++) {
-		z = get_z(x,y);
-		if ( board[z] ) continue;
-		if ( z == kou_z ) continue;	// コウ
-
-		value = rand() % 100;
-		capture = safe = 0;
-		for (i=0;i<4;i++) {
-			z1 = z+dir4[i];
-			k = board[z1];
-			if ( k == WAKU ) safe++;
-			if ( k == 0 || k == WAKU ) continue;
-			count_dame(z1);
-			if ( k == un_col && dame == 1 ) capture = 1;	// 敵石が取れる
-			if ( k ==    col && dame >= 2 ) safe++;			// 安全な味方に繋がる
-			value += (k==un_col) * ishi * (10 / (dame+1));
-		}
-		if ( safe == 4 ) continue;	// 眼には打たない。
-		if ( capture == 0 ) {		// 石が取れない場合は実際に置いてみて自殺手かどうか判定
-			int kz = kou_z;			// コウの位置を退避
-			flag = move_one(z,col);
-			board[z] = 0;
-			kou_z = kz;
-			if ( flag == MOVE_SUICIDE ) continue;	// 自殺手
-		}
-//		PRT("x,y=(%d,%d)=%d\n",x,y,value);
-		if ( value > max ) { max = value; ret_z = z; }
-	}
 	return ret_z;
 }
 
