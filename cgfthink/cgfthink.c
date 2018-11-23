@@ -264,8 +264,6 @@ DLL_EXPORT int cgfgui_thinking(
 				FILE* pInOldFile;
 				char* pInOldFileName = "in_old.txt";
 
-				//pInOldFile = fopen(pInOldFileName, "r");
-				//if (pInOldFile != NULL) {
 				if (0 == fopen_s(&pInOldFile, pInOldFileName, "r")) {
 					PRT("in_old.txt ファイルが在る\n");
 					// １つ前のファイルは削除
@@ -289,40 +287,6 @@ DLL_EXPORT int cgfgui_thinking(
 				else {
 					// ファイルの削除失敗
 					PRT("【▲！】（＞＿＜）in.txt を in_old.txt にリネーム失敗\n");
-				}
-			}
-
-			// ローテーション・デリート
-			{
-				// ファイル読込
-				FILE* pInOldFile;
-				char* pInOldFileName = "in_help_old.txt";
-
-				//pInOldFile = fopen(pInOldFileName, "r");
-				// if (pInOldFile != NULL) {
-				if (0 == fopen_s(&pInOldFile, pInOldFileName, "r")) {
-					PRT("in_help_old.txt ファイルが在る\n");
-					// １つ前のファイルは削除
-					fclose(pInOldFile);
-
-					if (remove(pInOldFileName) == 0) {
-						// ファイルの削除成功
-						PRT("in_help_old.txt ファイルを削除\n");
-					}
-					else {
-						// ファイルの削除失敗
-						PRT("【▲！】（＞＿＜）in_help_old.txt ファイルの削除失敗\n");
-					}
-				}
-
-				// ファイルのリネーム
-				if (rename("in_help.txt", "in_help_old.txt") == 0) {
-					// ファイルの削除成功
-					PRT("in_help.txt を in_help_old.txt にリネームした\n");
-				}
-				else {
-					// ファイルの削除失敗
-					PRT("【▲！】（＞＿＜）in_help.txt を in_help_old.txt にリネーム失敗\n");
 				}
 			}
 		}
