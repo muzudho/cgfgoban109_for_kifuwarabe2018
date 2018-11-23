@@ -273,7 +273,7 @@ DLL_EXPORT int cgfgui_thinking(
 	}
 	// (2017-03-17 Add end)
 
-	PRT("%4dè–Ú (%3d•b : %3d•b) %s %4d\n", dll_tesuu, sg_time[0], sg_time[1], dll_black_turn == 0 ? "•" : "”’", xxyy);
+	PRT("%4dè–Ú (%3d•b : %3d•b) %s %4d\n", dll_tesuu+1, sg_time[0], sg_time[1], dll_black_turn == 0 ? "•" : "”’", xxyy);
 	//  print_board();
 	return ret_z;
 }
