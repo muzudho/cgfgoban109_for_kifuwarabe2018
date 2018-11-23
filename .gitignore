@@ -1,5 +1,7 @@
 # Appends.
 .vs
+Release
+Debug
 *.pdb
 *.idb
 *.ilk
