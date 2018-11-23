@@ -1,3 +1,10 @@
+# Appends.
+.vs
+*.pdb
+*.idb
+*.ilk
+*.exp
+
 # Prerequisites
 *.d
 
