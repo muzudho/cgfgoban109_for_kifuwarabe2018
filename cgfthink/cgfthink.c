@@ -117,54 +117,224 @@ DLL_EXPORT void cgfgui_thinking_close(void)
 // 思考ルーチン。次の1手を返す。
 // 本体から初期盤面、棋譜、手数、手番、盤のサイズ、コミ、が入った状態で呼ばれる。
 DLL_EXPORT int cgfgui_thinking(
-	int dll_init_board[],	// 初期盤面
-	int dll_kifu[][3],		// 棋譜  [][0]...座標、[][1]...石の色、[][2]...消費時間（秒)
-	int dll_tesuu,			// 手数
-	int dll_black_turn,		// 手番(黒番...1、白番...0)
-	int dll_board_size,		// 盤面のサイズ
-	double dll_komi,		// コミ
-	int dll_endgame_type,	// 0...通常の思考、1...終局処理、2...図形を表示、3...数値を表示。
-	int dll_endgame_board[]	// 終局処理の結果を代入する。
+	int dll_init_board[],   // 初期盤面
+	int dll_kifu[][3],      // 棋譜  [][0]...座標、[][1]...石の色、[][2]...消費時間（秒)
+	int dll_tesuu,          // 手数
+	int dll_black_turn,     // 手番(黒番...1、白番...0)
+	int dll_board_size,     // 盤面のサイズ
+	double dll_komi,        // コミ
+	int dll_endgame_type,   // 0...通常の思考、1...終局処理、2...図形を表示、3...数値を表示。
+	int dll_endgame_board[] // 終局処理の結果を代入する。
 )
 {
-	int z,col,t,i,ret_z;
+	int z, col, t, i, xxyy, ret_z;
 
 	// 現在局面を棋譜と初期盤面から作る
-	for (i=0;i<BOARD_MAX;i++) board[i] = dll_init_board[i];	// 初期盤面をコピー
+	for (i = 0; i < BOARD_MAX; i++) board[i] = dll_init_board[i]; // 初期盤面をコピー
 	board_size = dll_board_size;
 	hama[0] = hama[1] = 0;
-	sg_time[0] = sg_time[1] = 0;	// 累計思考時間を初期化
+	sg_time[0] = sg_time[1] = 0;    // 累計思考時間を初期化
 	kou_z = 0;
-		
-	for (i=0;i<dll_tesuu;i++) {
-		z   = dll_kifu[i][0];	// 座標、y*256 + x の形で入っている
-		col = dll_kifu[i][1];	// 石の色
-		t   = dll_kifu[i][2];	// 消費時間
-		sg_time[i&1] += t;
-		if ( move_one(z,col) != MOVE_SUCCESS ) break;
+
+	for (i = 0; i < dll_tesuu; i++) {
+		z = dll_kifu[i][0];   // 座標、y*256 + x の形で入っている
+		col = dll_kifu[i][1];   // 石の色
+		t = dll_kifu[i][2];   // 消費時間
+		sg_time[i & 1] += t;
+		if (move_one(z, col) != MOVE_SUCCESS) break;
 	}
-	 
-#if 0	// 中断処理を入れる場合のサンプル。0を1にすればコンパイルされます。
-	for (i=0;i<300;i++) {				// 300*10ms = 3000ms = 3秒待ちます。
-		PassWindowsSystem();			// 一時的にWindowsに制御を渡します。
-		if ( *pThinkStop != 0 ) break;	// 中断ボタンが押された場合。
-		Sleep(10);						// 10ms(0.01秒)停止。
+
+#if 0   // 中断処理を入れる場合のサンプル。0を1にすればコンパイルされます。
+	for (i = 0; i < 300; i++) {               // 300*10ms = 3000ms = 3秒待ちます。
+		PassWindowsSystem();            // 一時的にWindowsに制御を渡します。
+		if (*pThinkStop != 0) break;  // 中断ボタンが押された場合。
+		Sleep(10);                      // 10ms(0.01秒)停止。
 	}
 #endif
 
 	// 終局処理、図形、数値を表示する場合
-	if ( dll_endgame_type == GAME_END_STATUS  ) return endgame_status(dll_endgame_board);
-	if ( dll_endgame_type == GAME_DRAW_FIGURE ) return endgame_draw_figure(dll_endgame_board);
-	if ( dll_endgame_type == GAME_DRAW_NUMBER ) return endgame_draw_number(dll_endgame_board);
+	if (dll_endgame_type == GAME_END_STATUS) return endgame_status(dll_endgame_board);
+	if (dll_endgame_type == GAME_DRAW_FIGURE) return endgame_draw_figure(dll_endgame_board);
+	if (dll_endgame_type == GAME_DRAW_NUMBER) return endgame_draw_number(dll_endgame_board);
 
 	// サンプルの思考ルーチンを呼ぶ
-	if ( dll_black_turn ) col = BLACK;
+	if (dll_black_turn) col = BLACK;
 	else                  col = WHITE;
-	ret_z = think_sample(col);
 
-	PRT("思考時間：先手=%d秒、後手=%d秒\n",sg_time[0],sg_time[1]);
-	PRT("着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n",(ret_z&0xff),(ret_z>>8),ret_z, dll_tesuu,dll_black_turn,dll_board_size,dll_komi);
-//	print_board();
+	// (2017-03-17 Add begin)
+	// ファイル書き出し
+	{
+		FILE* fp;
+		char* fname = "out.txt";
+
+		//fp = fopen(fname, "w");
+		//if (fp == NULL) {
+		if (0 != fopen_s(&fp, fname, "w")) {
+			printf("%s file can not open.\n", fname);
+			return -1;
+		}
+
+		// 現局面を出力
+		for (int y = 0; y < 21; y++)
+		{
+			for (int x = 0; x < 21; x++)
+			{
+				int i = y * 256 + x;
+				char buffer[20];
+				itoa(board[i], buffer, 10);
+				fprintf(fp, buffer);
+				fprintf(fp, ",");
+			}
+			fprintf(fp, "\n");
+		}
+		{
+			char buffer[20];
+
+			// アゲハマを出力
+			itoa(hama[0], buffer, 10);
+			fprintf(fp, buffer);
+			fprintf(fp, ",");
+
+			itoa(hama[1], buffer, 10);
+			fprintf(fp, buffer);
+			fprintf(fp, ",");
+
+			// 累計思考時間を出力
+			itoa(sg_time[0], buffer, 10);
+			fprintf(fp, buffer);
+			fprintf(fp, ",");
+
+			itoa(sg_time[1], buffer, 10);
+			fprintf(fp, buffer);
+			fprintf(fp, ",");
+
+			// コウを出力
+			itoa(kou_z, buffer, 10);
+			fprintf(fp, buffer);
+			fprintf(fp, ",");
+
+			// 手番（石の色）を出力
+			itoa(col, buffer, 10);
+			fprintf(fp, buffer);
+			fprintf(fp, ",");
+
+			fprintf(fp, "\n");
+		}
+
+		fclose(fp);
+	}
+
+	// 着手
+	ret_z = -1;
+	// ループ
+	while (-1 == ret_z) {
+		// ファイル読込
+		FILE* pInFile;
+		char* pInFileName = "in.txt";
+		char buffer[100];
+
+		//pInFile = fopen(pInFileName, "r");
+		//if (pInFile == NULL) {
+		if (0 != fopen_s(&pInFile, pInFileName, "r")) {
+			// ファイルを読込めなかった
+
+			// 0.1 秒スリープ
+			Sleep(100);
+		}
+		else
+		{
+			PRT("in.txt ファイルを読込みました\n");
+
+			if (fgets(buffer, 100, pInFile) != NULL) {
+				xxyy = atoi(buffer);
+				ret_z = (xxyy % 100) * 256 + xxyy / 100;
+			}
+			fclose(pInFile);
+			PRT("着手の要求 %d\n", ret_z);
+
+			// ローテーション・デリート
+			{
+				// ファイル読込
+				FILE* pInOldFile;
+				char* pInOldFileName = "in_old.txt";
+
+				//pInOldFile = fopen(pInOldFileName, "r");
+				//if (pInOldFile != NULL) {
+				if (0 == fopen_s(&pInOldFile, pInOldFileName, "r")) {
+					PRT("in_old.txt ファイルが在る\n");
+					// １つ前のファイルは削除
+					fclose(pInOldFile);
+
+					if (remove(pInOldFileName) == 0) {
+						// ファイルの削除成功
+						PRT("in_old.txt ファイルを削除\n");
+					}
+					else {
+						// ファイルの削除失敗
+						PRT("【▲！】（＞＿＜）in_old.txt ファイルの削除失敗\n");
+					}
+				}
+
+				// ファイルのリネーム
+				if (rename("in.txt", "in_old.txt") == 0) {
+					// ファイルの削除成功
+					PRT("in.txt を in_old.txt にリネームした\n");
+				}
+				else {
+					// ファイルの削除失敗
+					PRT("【▲！】（＞＿＜）in.txt を in_old.txt にリネーム失敗\n");
+				}
+			}
+
+			// ローテーション・デリート
+			{
+				// ファイル読込
+				FILE* pInOldFile;
+				char* pInOldFileName = "in_help_old.txt";
+
+				//pInOldFile = fopen(pInOldFileName, "r");
+				// if (pInOldFile != NULL) {
+				if (0 == fopen_s(&pInOldFile, pInOldFileName, "r")) {
+					PRT("in_help_old.txt ファイルが在る\n");
+					// １つ前のファイルは削除
+					fclose(pInOldFile);
+
+					if (remove(pInOldFileName) == 0) {
+						// ファイルの削除成功
+						PRT("in_help_old.txt ファイルを削除\n");
+					}
+					else {
+						// ファイルの削除失敗
+						PRT("【▲！】（＞＿＜）in_help_old.txt ファイルの削除失敗\n");
+					}
+				}
+
+				// ファイルのリネーム
+				if (rename("in_help.txt", "in_help_old.txt") == 0) {
+					// ファイルの削除成功
+					PRT("in_help.txt を in_help_old.txt にリネームした\n");
+				}
+				else {
+					// ファイルの削除失敗
+					PRT("【▲！】（＞＿＜）in_help.txt を in_help_old.txt にリネーム失敗\n");
+				}
+			}
+		}
+	}
+	// (2017-03-17 Add end)
+
+	// (2017-03-17 Modify begin)
+	if (0 == ret_z)
+	{
+		PRT("(＾◇＾)パスするぐらいならランダム打ちだ☆！\n");
+		// PASSとダイアログが出てきて対局が止まるのを防止☆
+		ret_z = think_sample(col);
+	}
+	// (2017-03-17 Modify end)
+
+	PRT("思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
+	PRT("着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
+	//  print_board();
 	return ret_z;
 }
 
