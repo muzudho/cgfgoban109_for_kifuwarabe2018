@@ -1,0 +1,5 @@
+﻿  cgfthink.c
+c:\muzudhodrive\projects_cpp\cgfgoban109\cgfthink\cgfthink.c(85): warning C4996: '_vsnprintf': This function or variable may be unsafe. Consider using _vsnprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1396): note: '_vsnprintf' の宣言を確認してください
+     ライブラリ .\Release\cgfthink.lib とオブジェクト .\Release\cgfthink.exp を作成中
+  cgfthink.vcxproj -> C:\MuzudhoDrive\projects_cpp\cgfgoban109\cgfthink\.\Release\cgfthink.dll

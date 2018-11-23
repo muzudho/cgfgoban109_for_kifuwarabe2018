@@ -1,0 +1,579 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "cgf_rc.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+CGF1                    ICON    DISCARDABLE     "cgf1.ico"
+CGF2                    ICON    DISCARDABLE     "cgf2.ico"
+CGF3                    ICON    DISCARDABLE     "cgf3.ico"
+CGF4                    ICON    DISCARDABLE     "cgf4.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+CGFGUI MENU DISCARDABLE 
+BEGIN
+    POPUP "ファイル(&F)"
+    BEGIN
+        MENUITEM "開く(&O)...\tCtrl+O",         IDM_KIFU_OPEN
+        MENUITEM "保存(&S)...\tCtrl+S",         IDM_KIFU_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "盤面をコピー(&B)",            IDM_CLIPBOARD
+        MENUITEM "棋譜をSGFでコピー(&C)\tCtrl+C", IDM_SGF_CLIPOUT
+        MENUITEM "盤面・棋譜の貼り付け(&P)\tCtrl+V", IDM_FROM_CLIPBOARD
+        MENUITEM SEPARATOR
+        MENUITEM "終了(&X)",                    IDM_EXIT
+        MENUITEM SEPARATOR
+    END
+    POPUP "対局(&P)"
+    BEGIN
+        MENUITEM "対局開始(&N)...\tCtrl+N",     IDM_PLAY_START
+        MENUITEM "パス(&P)",                    IDM_PASS
+        MENUITEM "投了(&R)",                    IDM_RESIGN
+        MENUITEM "対局中断(&I)",                IDM_BREAK
+        MENUITEM "思考中断(&B)",                IDM_DLL_BREAK
+        MENUITEM SEPARATOR
+        POPUP "棋譜再現(&M)"
+        BEGIN
+            MENUITEM "初期画面へ(&1)\tHome",        IDM_BACKFIRST
+            MENUITEM "10手戻す(&2)\t↑",            IDM_BACK10
+            MENUITEM "１手戻す(&3)\t←",            IDM_BACK1
+            MENUITEM "１手進める(&4)\t→",          IDM_FORTH1
+            MENUITEM "10手進める(&5)\t↓",          IDM_FORTH10
+            MENUITEM "終局画面へ(&6)\tEnd",         IDM_FORTHEND
+        END
+    END
+    POPUP "設定(&C)"
+    BEGIN
+        MENUITEM "着手音(&S)",                  IDM_SOUND
+        POPUP "盤面色(&C)"
+        BEGIN
+            MENUITEM "基本色(&N)",                  ID_BAN_1
+            MENUITEM "明るい(&L)",                  ID_BAN_2
+            MENUITEM "暗い(&D)",                    ID_BAN_3
+            MENUITEM "もっと暗い(&B)",              ID_BAN_4
+            MENUITEM "ゴム盤(&R)",                  ID_BAN_5
+            MENUITEM "緑(&G)",                      ID_BAN_6
+            MENUITEM "黄色(&Y)",                    ID_BAN_7
+            MENUITEM "白(&W)",                      ID_BAN_8
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "GTPの設定(&G)",               IDM_GNUGO_SETTING
+    END
+    POPUP "表示(&V)"
+    BEGIN
+        MENUITEM "終局判定(&E)\t1",             IDM_VIEW_LIFEDEATH
+        MENUITEM "図形を表示(&F)\t2",           IDM_VIEW_FIGURE
+        MENUITEM "数値を表示(&N)\t3",           IDM_VIEW_NUMBER
+        MENUITEM SEPARATOR
+        MENUITEM "中国ルールでの判定も表示(&R)", IDM_CHINESE_RULE
+        MENUITEM "座標をATで(&A)",              IDM_ATVIEW
+        MENUITEM SEPARATOR
+        MENUITEM "情報ウィンドウ(&V)",          IDM_PRINT, CHECKED
+        MENUITEM "コンソールを起動時に表示",    IDM_SHOW_CONSOLE
+    END
+    POPUP "ヘルプ(&H)"
+    BEGIN
+        MENUITEM "CgfGoBanについて(&A)...",     IDM_ABOUT
+    END
+END
+
+PRT_POPUP MENU DISCARDABLE 
+BEGIN
+    POPUP "dummy"
+    BEGIN
+        MENUITEM "全部クリップボードへコピー(&C)", IDM_PRT_TO_CLIP
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ABOUT_DIALOG DIALOG DISCARDABLE  70, 50, 154, 85
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "CGF碁盤について"
+FONT 12, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,57,66,40,14
+    ICON            "CGF1",IDC_STATIC,14,6,20,20
+    LTEXT           "CGF碁盤",IDC_STATIC,43,8,96,8
+    LTEXT           "CgfGoban Version",IDM_CGF_VERSION,50,21,85,8
+    LTEXT           "(c) 2005-2018 Hiroshi Yamashita",IDC_STATIC,22,33,117,8
+    PUSHBUTTON      "URL",IDM_HOMEPAGE,5,48,145,13
+END
+
+COMM_DIALOG DIALOG DISCARDABLE  1000, 1000, 109, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "通信処理待機中"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    PUSHBUTTON      "中断(&C)",IDCANCEL,29,31,50,14
+    LTEXT           "相手の手を待っています。",IDC_STATIC,15,11,79,8
+END
+
+START_DIALOG DIALOG DISCARDABLE  70, 50, 223, 243
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Play Setting"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    LTEXT           "Black",IDC_STATIC,11,11,18,8
+    COMBOBOX        IDC_BLACK_TYPE,34,7,62,96,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "White",IDC_STATIC,11,31,17,8
+    COMBOBOX        IDC_WHITE_TYPE,34,28,62,107,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "SGMP(RS232C) Setting",IDC_STATIC,13,51,195,30
+    LTEXT           "COM port",IDC_STATIC,24,65,31,8
+    COMBOBOX        IDM_COM_PORT,61,62,35,119,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "NNGS Setting",IDC_STATIC,13,89,196,72
+    LTEXT           "IP(URL)",IDC_STATIC,74,101,24,8
+    COMBOBOX        IDM_NNGS_SERVER,106,99,98,179,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Login name :",IDC_STATIC,27,117,40,8
+    LTEXT           "Black",IDC_STATIC,72,117,18,8
+    EDITTEXT        IDM_NNGS_NAME1,95,115,37,12,ES_AUTOHSCROLL
+    LTEXT           "White",IDC_STATIC,145,118,18,8
+    EDITTEXT        IDM_NNGS_NAME2,168,115,36,12,ES_AUTOHSCROLL
+    GROUPBOX        "",IDC_STATIC,12,165,197,50
+    LTEXT           "Board Size",IDC_STATIC,23,180,37,8
+    COMBOBOX        IDC_BOARD_SIZE,66,177,32,88,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Handicap",IDC_STATIC,24,197,28,8
+    COMBOBOX        IDM_HANDICAP,66,195,32,157,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Komi",IDC_STATIC,142,180,19,8
+    COMBOBOX        IDM_KOMI,166,177,34,228,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,47,222,50,14
+    PUSHBUTTON      "ｷｬﾝｾﾙ",IDCANCEL,124,222,50,14
+    COMBOBOX        IDC_BLACK_NAME,108,8,96,345,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_WHITE_NAME,108,28,96,338,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "sudden death time limit(minutes)",IDC_STATIC,27,133,101,
+                    8
+    EDITTEXT        IDM_NNGS_MINUTES,129,131,26,12,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "* White logins first, and Black logins.",IDC_STATIC,27,
+                    148,163,8
+    CONTROL         "AI Ryusei",IDM_AI_RYUSEI,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,20,101,50,10
+END
+
+NNGS_WAIT DIALOG DISCARDABLE  1000, 1000, 109, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wait NNGS data"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    PUSHBUTTON      "Stop(&C)",IDCANCEL,29,31,50,14
+    LTEXT           "Wait for nngs data...",IDC_STATIC,15,7,79,19
+END
+
+GTP_SETTING DIALOG DISCARDABLE  50, 50, 243, 107
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "GTP Setting"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    CONTROL         "Use GTP Engine in Life and Death View",
+                    IDM_GNUGO_LIFEDEATH,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,10,170,8
+    LTEXT           "GnuGo is very slow in opening and middlegame.\nMoGo does not work this option.",
+                    IDC_STATIC,20,20,205,16
+    LTEXT           "GTP engine full path.  ( If you use GnuGo, add ""--mode gtp"" )",
+                    IDC_STATIC,10,41,215,10
+    COMBOBOX        IDM_GTP_PATH,7,56,229,312,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,60,86,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,135,86,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR             BITMAP  DISCARDABLE     "Toolbar.bmp"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "cgf_rc.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    "ABOUT_DIALOG", DIALOG
+    BEGIN
+        RIGHTMARGIN, 152
+        BOTTOMMARGIN, 81
+    END
+
+    "COMM_DIALOG", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 102
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    "START_DIALOG", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 222
+        TOPMARGIN, 2
+    END
+
+    "NNGS_WAIT", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 102
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    "GTP_SETTING", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 236
+        TOPMARGIN, 10
+        BOTTOMMARGIN, 100
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+CGF_ACCEL ACCELERATORS DISCARDABLE 
+BEGIN
+    "1",            IDM_PRINT_REN,          VIRTKEY, CONTROL, NOINVERT
+    "2",            IDM_HYOUKATI,           VIRTKEY, CONTROL, NOINVERT
+    "3",            IDM_PRINT_GUN,          VIRTKEY, CONTROL, NOINVERT
+    "4",            IDM_PRINT_KAKUTEI_JI,   VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_SGF_CLIPOUT,        VIRTKEY, CONTROL, NOINVERT
+    "N",            IDM_PLAY_START,         VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_KIFU_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_KIFU_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_FROM_CLIPBOARD,     VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_LOAD_FILTER         "囲碁用棋譜ファイル(*.ig1;*sgf)|*.IG1;*sgf|IG1ファイル(*.ig1)|*.ig1|SGFファイル(*.sgf)|*.sgf|全てのファイル(*.*)|*.*|"
+    IDS_SAVE_FILTER         "SGFファイル(*.sgf)|*.sgf|IG1ファイル(*.ig1)|*.ig1|全てのファイル(*.*)|*.*|"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_DEADSTONE           "終局処理"
+    IDM_SET_BOARD           "盤面の再構築"
+    IDM_PLAY_START          "対局開始"
+    IDM_PASS                "パス"
+    IDM_BAN_EDIT            "対局、編集モード切替"
+    IDM_KIFU_SAVE           "棋譜を保存"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_KIFU_OPEN           "棋譜を開く"
+    IDM_BACK1               "１手戻す"
+    IDM_FORTH1              "１手進める"
+    IDM_BACK10              "10手戻す"
+    IDM_FORTH10             "10手進める"
+    IDM_BACKFIRST           "初期盤面へ"
+    IDM_FORTHEND            "終局画面へ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_BEFORE_DEAD_GUN     "群の状態"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_PRT_HASH            "最善応手手順"
+    IDM_BREAK               "対局を中断する"
+    IDM_RESTART             "再開"
+    IDM_UNDO                "待った"
+    IDM_DLL_BREAK           "思考中断"
+END
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 英語 (ｱﾒﾘｶ) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+CGFGUI MENU DISCARDABLE 
+BEGIN
+    POPUP "File(&F)"
+    BEGIN
+        MENUITEM "Open File(&O)...\tCtrl+O",    IDM_KIFU_OPEN
+        MENUITEM "Save File(&S)...\tCtrl+S",    IDM_KIFU_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "Copy board to clipboard(&B)", IDM_CLIPBOARD
+        MENUITEM "Copy SGF file(&C)\tCtrl+C",   IDM_SGF_CLIPOUT
+        MENUITEM "Paste position or SGF(&P)\tCtrl+V", IDM_FROM_CLIPBOARD
+        MENUITEM SEPARATOR
+        MENUITEM "Exit(&X)",                    IDM_EXIT
+        MENUITEM SEPARATOR
+    END
+    POPUP "Play(&P)"
+    BEGIN
+        MENUITEM "Start Game(&N)...\tCtrl+N",   IDM_PLAY_START
+        MENUITEM "Pass(&P)",                    IDM_PASS
+        MENUITEM "Resign(&R)",                  IDM_RESIGN
+        MENUITEM "Stop Game(&M)",               IDM_BREAK
+        MENUITEM "Stop Thinking(&S)",           IDM_DLL_BREAK
+        MENUITEM SEPARATOR
+        POPUP "Replay(&R)"
+        BEGIN
+            MENUITEM "Top(&1)\tHome",               IDM_BACKFIRST
+            MENUITEM "10 moves back(&2)\tPageUp",   IDM_BACK10
+            MENUITEM "Back(&3)\tLeft",              IDM_BACK1
+            MENUITEM "Forword(&4)\tRight",          IDM_FORTH1
+            MENUITEM "10 moves forword(&5)\tPageDown", IDM_FORTH10
+            MENUITEM "End(&6)\tEnd",                IDM_FORTHEND
+        END
+    END
+    POPUP "Setting(&C)"
+    BEGIN
+        POPUP "Board color(&C)"
+        BEGIN
+            MENUITEM "Basic(&B)",                   ID_BAN_1
+            MENUITEM "High(&H)",                    ID_BAN_2
+            MENUITEM "Dark(&D)",                    ID_BAN_3
+            MENUITEM "Deep(&E)",                    ID_BAN_4
+            MENUITEM "Rubber(&R)",                  ID_BAN_5
+            MENUITEM "Green(&G)",                   ID_BAN_6
+            MENUITEM "Yellow(&Y)",                  ID_BAN_7
+            MENUITEM "White(&W)",                   ID_BAN_8
+        END
+        MENUITEM "Sound(&S)",                   IDM_SOUND
+        MENUITEM SEPARATOR
+        MENUITEM "GTP Setting(&G)...",          IDM_GNUGO_SETTING
+    END
+    POPUP "View(&V)"
+    BEGIN
+        MENUITEM "View Life and Death(&E)\t1",  IDM_VIEW_LIFEDEATH
+        MENUITEM "View Figure(&F)\t2",          IDM_VIEW_FIGURE
+        MENUITEM "View Numbers(&N)\t3",         IDM_VIEW_NUMBER
+        MENUITEM SEPARATOR
+        MENUITEM "View Chinese rule result(&R)", IDM_CHINESE_RULE
+        MENUITEM "AT coordinates(&A)",          IDM_ATVIEW
+        MENUITEM SEPARATOR
+        MENUITEM "Information Window(&V)",      IDM_PRINT, CHECKED
+        MENUITEM "Show Console Window on start-up", IDM_SHOW_CONSOLE
+    END
+    POPUP "Help(&H)"
+    BEGIN
+        MENUITEM "About CgfGoBan(&A)...",       IDM_ABOUT
+    END
+END
+
+PRT_POPUP MENU DISCARDABLE 
+BEGIN
+    POPUP "dummy"
+    BEGIN
+        MENUITEM "Copy to Clipborad(&C)",       IDM_PRT_TO_CLIP
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ABOUT_DIALOG DIALOG DISCARDABLE  70, 50, 186, 83
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About CgfGoBan"
+FONT 10, "system"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,73,66,40,14
+    ICON            "CGF1",IDC_STATIC,38,5,20,20
+    LTEXT           "CgfGoBan",IDC_STATIC,61,8,100,8
+    LTEXT           "Cgf Version",IDM_CGF_VERSION,65,21,101,8
+    LTEXT           "(c) 2005-2018 Hiroshi Yamashita",IDC_STATIC,32,35,121,8
+    PUSHBUTTON      "URL",IDM_HOMEPAGE,16,50,153,11
+END
+
+COMM_DIALOG DIALOG DISCARDABLE  1000, 1000, 109, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Waiting communication"
+FONT 9, "System"
+BEGIN
+    PUSHBUTTON      "Stop(&C)",IDCANCEL,29,31,50,14
+    LTEXT           "Wait for opponent move.",IDC_STATIC,10,14,89,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    "ABOUT_DIALOG", DIALOG
+    BEGIN
+        BOTTOMMARGIN, 81
+    END
+
+    "COMM_DIALOG", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 102
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_LOAD_FILTER         "Go file(*.ig1;*sgf)|*.IG1;*sgf|IG1 File(*.ig1)|*.ig1|SGF File(*.sgf)|*.sgf|All file(*.*)|*.*|"
+    IDS_SAVE_FILTER         "SGF File(*.sgf)|*.sgf|IG1 File(*.ig1)|*.ig1|All File(*.*)|*.*|"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_DEADSTONE           "Life and Death"
+    IDM_SET_BOARD           "Reconstruct borad"
+    IDM_PLAY_START          "Start Game"
+    IDM_PASS                "Pass"
+    IDM_BAN_EDIT            "switch human play or edit"
+    IDM_KIFU_SAVE           "Save file"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_KIFU_OPEN           "Open file"
+    IDM_BACK1               "Back"
+    IDM_FORTH1              "Forword"
+    IDM_BACK10              "10 moves back"
+    IDM_FORTH10             "10 moves forword"
+    IDM_BACKFIRST           "Top"
+    IDM_FORTHEND            "End"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_BEFORE_DEAD_GUN     "View Groups"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_PRT_HASH            "Principal Variation from hash table"
+    IDM_BREAK               "Stop Game"
+    IDM_RESTART             "Continue Game"
+    IDM_UNDO                "Undo"
+    IDM_DLL_BREAK           "Stop Thinking"
+END
+
+#endif    // 英語 (ｱﾒﾘｶ) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

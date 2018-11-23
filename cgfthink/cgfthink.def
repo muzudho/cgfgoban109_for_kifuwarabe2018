@@ -1,0 +1,6 @@
+LIBRARY     CGFTHINK.DLL
+
+EXPORTS
+    cgfgui_thinking       = _cgfgui_thinking          @3   ; _cgfgui_thinking
+    cgfgui_thinking_close = _cgfgui_thinking_close    @2   ; _cgfgui_thinking_close
+    cgfgui_thinking_init  = _cgfgui_thinking_init     @1   ; _cgfgui_thinking_init
