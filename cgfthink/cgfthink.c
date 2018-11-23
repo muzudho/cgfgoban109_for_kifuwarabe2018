@@ -227,20 +227,20 @@ DLL_EXPORT int cgfgui_thinking(
 			fprintf(fp, "\n");
 		}
 
+		// ここでロック解除。
 		fclose(fp);
+		PRT("out.txt出力 / ");
 	}
 
 	// 着手
 	ret_z = -1;
-	// ループ
+	// 成功するまでリトライ。
 	while (-1 == ret_z) {
 		// ファイル読込
 		FILE* pInFile;
 		char* pInFileName = "in.txt";
 		char buffer[100];
 
-		//pInFile = fopen(pInFileName, "r");
-		//if (pInFile == NULL) {
 		if (0 != fopen_s(&pInFile, pInFileName, "r")) {
 			// ファイルを読込めなかった
 
@@ -249,52 +249,31 @@ DLL_EXPORT int cgfgui_thinking(
 		}
 		else
 		{
-			PRT("in.txt ファイルを読込みました\n");
-
 			if (fgets(buffer, 100, pInFile) != NULL) {
 				xxyy = atoi(buffer);
 				ret_z = (xxyy % 100) * 256 + xxyy / 100;
-			}
-			fclose(pInFile);
-			PRT("着手の要求 %d\n", ret_z);
 
-			// ローテーション・デリート
-			{
-				// ファイル読込
-				FILE* pInOldFile;
-				char* pInOldFileName = "in_old.txt";
+				fclose(pInFile);
 
-				if (0 == fopen_s(&pInOldFile, pInOldFileName, "r")) {
-					PRT("in_old.txt ファイルが在る\n");
-					// １つ前のファイルは削除
-					fclose(pInOldFile);
-
-					if (remove(pInOldFileName) == 0) {
-						// ファイルの削除成功
-						PRT("in_old.txt ファイルを削除\n");
-					}
-					else {
-						// ファイルの削除失敗
-						PRT("【▲！】（＞＿＜）in_old.txt ファイルの削除失敗\n");
-					}
-				}
-
-				// ファイルのリネーム
-				if (rename("in.txt", "in_old.txt") == 0) {
+				// ファイルを閉じてから、削除。
+				if (remove(pInFileName) == 0) {
 					// ファイルの削除成功
-					PRT("in.txt を in_old.txt にリネームした\n");
+					PRT("in.txt入力 / ");
 				}
 				else {
 					// ファイルの削除失敗
-					PRT("【▲！】（＞＿＜）in.txt を in_old.txt にリネーム失敗\n");
+					PRT("【▲！】（＞＿＜）in.txt ファイルの削除失敗 / ");
 				}
+			}
+			else
+			{
+				fclose(pInFile);
 			}
 		}
 	}
 	// (2017-03-17 Add end)
 
-	PRT("思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
-	PRT("着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
+	PRT("%4d手目 (%3d秒 : %3d秒) %s %4d\n", dll_tesuu, sg_time[0], sg_time[1], dll_black_turn == 0 ? "黒" : "白", xxyy);
 	//  print_board();
 	return ret_z;
 }
